@@ -19,6 +19,9 @@ const pagamento_module_1 = require("./linkdepagamento/pagamento.module");
 const prisma_service_1 = require("./prisma/prisma.service");
 const asaas_service_1 = require("./services/asaas.service");
 const usuario_module_1 = require("./usuario/usuario.module");
+const tfa_controller_1 = require("./2fa/tfa.controller");
+const tfa_service_1 = require("./2fa/tfa.service");
+const nestjs_session_1 = require("nestjs-session");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -31,9 +34,20 @@ AppModule = __decorate([
             config_1.ConfigModule,
             pagamento_module_1.PagamentoModule,
             usuario_module_1.UsuarioModule,
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+            }),
+            nestjs_session_1.SessionModule.forRoot({
+                session: {
+                    secret: 'my-secret',
+                    resave: false,
+                    saveUninitialized: true,
+                    cookie: { secure: false },
+                }
+            })
         ],
-        controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService, prisma_service_1.PrismaService, asaas_service_1.AsaasService],
+        controllers: [app_controller_1.AppController, tfa_controller_1.TfaController],
+        providers: [app_service_1.AppService, prisma_service_1.PrismaService, asaas_service_1.AsaasService, tfa_service_1.TfaService],
         exports: [prisma_service_1.PrismaService],
     })
 ], AppModule);
